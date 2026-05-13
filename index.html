@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login Page</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" href="https://www.freepnglogos.com/uploads/hacker-png/hacked-laptop-hacker-svg-png-icon-download-0.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+
+body{
+margin:0;
+overflow:hidden;
+background:#000;
+font-family:monospace;
+color:#00ffcc;
+}
+
+/* ===== GLITCH OVERLAY ===== */
+body::before{
+content:"";
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:repeating-linear-gradient(
+0deg,
+rgba(0,255,204,0.05),
+rgba(0,255,204,0.05) 1px,
+transparent 1px,
+transparent 3px
+);
+pointer-events:none;
+z-index:2;
+}
+
+/* ===== NOISE ===== */
+body::after{
+content:"";
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:url('https://i.imgur.com/3ZQ3ZQp.png');
+opacity:0.05;
+pointer-events:none;
+z-index:3;
+}
+
+#bg{
+position:fixed;
+top:0;
+left:0;
+z-index:0;
+}
+
+.ui{
+position:absolute;
+z-index:10;
+width:900px;
+height:600px;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:rgba(0,0,0,0.85);
+border:1px solid #00ffcc;
+box-shadow:0 0 40px #00ffcc;
+display:flex;
+opacity:0;
+backdrop-filter: blur(8px);
+animation: flicker 3s infinite;
+}
+
+@keyframes flicker{
+0%,100%{box-shadow:0 0 20px #00ffcc;}
+50%{box-shadow:0 0 60px #00ffcc;}
+}
+
+.left{
+width:35%;
+border-right:1px solid #00ffcc;
+padding:10px;
+font-size:11px;
+overflow:hidden;
+}
+
+.right{
+width:65%;
+padding:40px;
+}
+
+.glitch{
+font-size:22px;
+text-shadow:
+0 0 5px #00ffcc,
+0 0 10px #00ffcc,
+0 0 20px #00ffcc;
+animation: glitch 1s infinite;
+}
+
+@keyframes glitch{
+0%{transform:translate(0);}
+20%{transform:translate(-1px,1px);}
+40%{transform:translate(1px,-1px);}
+60%{transform:translate(-1px,-1px);}
+80%{transform:translate(1px,1px);}
+100%{transform:translate(0);}
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+background:black;
+border:1px solid #00ffcc;
+color:#00ffcc;
+outline:none;
+box-shadow:0 0 10px #00ffcc33;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#00ffcc;
+border:none;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+
+button:hover{
+background:white;
+box-shadow:0 0 30px #00ffcc;
+}
+
+#loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:4px;
+background:#111;
+z-index:20;
+}
+
+#bar{
+width:0%;
+height:100%;
+background:#00ffcc;
+box-shadow:0 0 20px #00ffcc;
+}
+
+#success{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#00ffcc;
+color:black;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:99;
+}
+
+.type{
+white-space:nowrap;
+overflow:hidden;
+border-right:2px solid #00ffcc;
+animation: typing 3s steps(30,end), blink .6s infinite;
+}
+
+@keyframes typing{
+from{width:0}
+to{width:100%}
+}
+
+@keyframes blink{
+50%{border-color:transparent}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="bg"></div>
+
+<div id="loader"><div id="bar"></div></div>
+
+<div class="ui" id="ui">
+
+<div class="left" id="log">
+> INITIALIZING NEURAL CORE...
+</div>
+
+<div class="right">
+
+<div class="glitch">CYBER ACCESS TERMINAL</div>
+
+<input id="email" placeholder="USER_ID">
+<input id="pass" type="password" placeholder="ACCESS_KEY">
+
+<button onclick="login()">BREACH SYSTEM</button>
+
+</div>
+
+</div>
+
+<div id="success">
+<h1 class="type">ACCESS GRANTED</h1>
+<p>Redirecting to secure node...</p>
+</div>
+
+<script>
+
+/* ===== 3D STARFIELD ===== */
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({alpha:true});
+renderer.setSize(innerWidth,innerHeight);
+document.getElementById("bg").appendChild(renderer.domElement);
+
+const geo=new THREE.BufferGeometry();
+const count=6000;
+const pos=new Float32Array(count*3);
+
+for(let i=0;i<count*3;i++){
+pos[i]=(Math.random()-0.5)*80;
+}
+
+geo.setAttribute("position",new THREE.BufferAttribute(pos,3));
+
+const mat=new THREE.PointsMaterial({
+color:0x00ffcc,
+size:0.02
+});
+
+const stars=new THREE.Points(geo,mat);
+scene.add(stars);
+camera.position.z=2;
+
+function animate(){
+requestAnimationFrame(animate);
+stars.rotation.y+=0.0012;
+stars.rotation.x+=0.0005;
+renderer.render(scene,camera);
+}
+animate();
+
+/* ===== HACK TERMINAL STREAM ===== */
+const log=document.getElementById("log");
+
+const hacks=[
+"bypassing firewall...",
+"injecting payload...",
+"decrypting node 7...",
+"accessing mainframe...",
+"routing proxy tunnel...",
+"kernel override active...",
+"system vulnerability found...",
+"establishing secure shell..."
+];
+
+setInterval(()=>{
+let d=document.createElement("div");
+d.innerText="> "+hacks[Math.floor(Math.random()*hacks.length)];
+log.appendChild(d);
+if(log.children.length>25) log.removeChild(log.firstChild);
+},400);
+
+/* ===== LOADING BAR ===== */
+function loadBar(){
+let bar=document.getElementById("bar");
+let w=0;
+
+let i=setInterval(()=>{
+w+=3;
+bar.style.width=w+"%";
+
+let beep=new Audio("https://www.soundjay.com/button/beep-07.mp3");
+beep.volume=0.2;
+beep.play();
+
+if(w>=100) clearInterval(i);
+
+},60);
+}
+
+/* ===== FAKE DB ===== */
+const db={
+admin:"123",
+root:"root",
+neo:"matrix"
+};
+
+/* ===== LOGIN ===== */
+function login(){
+
+let u=document.getElementById("email").value;
+let p=document.getElementById("pass").value;
+
+loadBar();
+
+setTimeout(()=>{
+
+if(db[u] && db[u]===p){
+
+gsap.to("#ui",{opacity:0,duration:1});
+
+setTimeout(()=>{
+document.getElementById("success").style.display="flex";
+gsap.from("#success",{scale:2,opacity:0,duration:0.8});
+},800);
+
+setTimeout(()=>{
+window.location.href="https://shahnazkitchen.oneapp.dev/";
+},2500);
+
+}else{
+gsap.to(".ui",{x:10,repeat:6,yoyo:true,duration:0.05});
+alert("SYSTEM BLOCKED ❌");
+}
+
+},1200);
+}
+
+/* ===== RESIZE ===== */
+window.addEventListener("resize",()=>{
+camera.aspect=innerWidth/innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(innerWidth,innerHeight);
+});
+
+window.onload=()=>{
+gsap.to("#ui",{opacity:1,duration:1.2});
+};
+
+</script>
+
+</body>
+</html>
